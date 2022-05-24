@@ -1,5 +1,7 @@
-## osrf/ros:melodic-desktop
-ARG BASE_IMAGE
+# create /choreonoid_ws and /catkin_ws
+# choreonoid_ws: choreonoid
+# catkin_ws: rtmros_choreonoid, rtmros_tutorials
+ARG BASE_IMAGE=ros:ros-melodic-base
 FROM ${BASE_IMAGE}
 
 LABEL maintainer "YoheiKakiuchi <kakiuchi.yohei.sw@tut.jp>"
@@ -30,10 +32,10 @@ RUN /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && catkin config --in
 ENV MY_ROSWORKSPACE /catkin_ws
 WORKDIR ${MY_ROSWORKSPACE}
 
-##  wstool set -y -t src rtmros_choreonoid https://github.com/start-jsk/rtmros_choreonoid --git && \    
+##  wstool set -y -t src rtmros_choreonoid https://github.com/YoheiKakiuchi/rtmros_choreonoid -v fix_footsal --git && \
 RUN source /choreonoid_ws/install/setup.bash && \
     wstool init src && \
-    wstool set -y -t src rtmros_choreonoid https://github.com/YoheiKakiuchi/rtmros_choreonoid -v fix_footsal --git && \
+    wstool set -y -t src rtmros_choreonoid https://github.com/start-jsk/rtmros_choreonoid --git && \
     wstool set -y -t src rtmros_tutorials https://github.com/start-jsk/rtmros_tutorials.git --git && \
     wstool set -y -t src jsk_robot https://github.com/jsk-ros-pkg/jsk_robot.git --git && \
     wstool set -y -t src jsk_control https://github.com/jsk-ros-pkg/jsk_control.git --git && \
