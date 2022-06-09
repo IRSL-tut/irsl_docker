@@ -5,7 +5,7 @@ wget -P /tmp https://raw.githubusercontent.com/IRSL-tut/irsl_docker/main/Dockerf
 wget -P /tmp https://raw.githubusercontent.com/IRSL-tut/irsl_docker/main/Dockerfile.add_entrypoint
 
 PULLORIGIN="--pull"
-ORIGIN_IMAGE=ros:ros-melodic-base
+ORIGIN_IMAGE=ros:melodic-ros-base
 CACHED=""
 TARGET_NAME=irslrepo/humanoid_sim:melodic
 
