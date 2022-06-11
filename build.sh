@@ -2,18 +2,20 @@
 
 set -e
 
+ROS_DISTRO_=noetic
+
 wget -P /tmp https://raw.githubusercontent.com/IRSL-tut/irsl_docker/main/Dockerfile.add_virtualgl
 wget -P /tmp https://raw.githubusercontent.com/IRSL-tut/irsl_docker/main/Dockerfile.add_glvnd
 wget -P /tmp https://raw.githubusercontent.com/IRSL-tut/irsl_docker/main/Dockerfile.add_entrypoint
 
 PULLORIGIN="--pull"
-ORIGIN_IMAGE=ros:melodic-ros-base
+ORIGIN_IMAGE=ros:${ROS_DISTRO_}-ros-base
 CACHED=""
-TARGET_NAME=irslrepo/irsl_choreonoid:melodic
+TARGET_NAME=irslrepo/irsl_choreonoid:${ROS_DISTRO_}
 
-BUILD_A=build_temp/add_glvnd:melodic
-BUILD_B=build_temp/add_virtualgl:melodic
-BUILD_C=build_temp/irsl_choreonoid:melodic
+BUILD_A=build_temp/add_glvnd:${ROS_DISTRO_}
+BUILD_B=build_temp/add_virtualgl:${ROS_DISTRO_}
+BUILD_C=build_temp/irsl_choreonoid:${ROS_DISTRO_}
 
 echo "## ADD glvnd"
 docker build . ${CACHED} ${PULLORIGIN} -f /tmp/Dockerfile.add_glvnd      --build-arg BASE_IMAGE=${ORIGIN_IMAGE} -t ${BUILD_A}
