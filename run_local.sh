@@ -1,6 +1,6 @@
 #!/bin/bash
 
-iname=${DOCKER_IMAGE:-"irslrepo/irsl_choreonoid:melodic"} ##
+iname=${DOCKER_IMAGE:-"irslrepo/irsl_choreonoid:noetic"} ##
 cname=${DOCKER_CONTAINER:-"docker_irsl_choreonoid"} ## name of container (should be same as in exec.sh)
 
 ###

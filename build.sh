@@ -2,15 +2,20 @@
 
 set -e
 
-ROS_DISTRO_=noetic
+## noetic or melodic
+ROS_DISTRO_=${BUILD_ROS:-"noetic"}
+## --no-cache
+CACHED=${BUILD_CACHED:-""}
+## --pull
+PULLORIGIN=${BUILD_PULLED:-""}
+##
+ADD_OPENSCAD=${BUILD_OPEN_SCAD:-"add"}
 
 wget -P /tmp https://raw.githubusercontent.com/IRSL-tut/irsl_docker/main/Dockerfile.add_virtualgl
 wget -P /tmp https://raw.githubusercontent.com/IRSL-tut/irsl_docker/main/Dockerfile.add_glvnd
 wget -P /tmp https://raw.githubusercontent.com/IRSL-tut/irsl_docker/main/Dockerfile.add_entrypoint
 
-PULLORIGIN="--pull"
 ORIGIN_IMAGE=ros:${ROS_DISTRO_}-ros-base
-CACHED=""
 TARGET_NAME=irslrepo/irsl_choreonoid:${ROS_DISTRO_}
 
 BUILD_A=build_temp/add_glvnd:${ROS_DISTRO_}
@@ -26,4 +31,7 @@ docker build . ${CACHED}               -f Dockerfile                     --build
 echo "## ADD entrypoint"
 docker build . ${CACHED}               -f /tmp/Dockerfile.add_entrypoint --build-arg BASE_IMAGE=${BUILD_C} -t ${TARGET_NAME}
 
+if [ "${ROS_DISTRO_}" = "noetic" -a "${ADD_OPENSCAD}" = "add" ]; then
+    docker build . ${CACHED}           -f Dockerfile.add_openscad   --build-arg BASE_IMAGE=${TARGET_NAME} -t irslrepo/irsl_choreonoid_openscad:${ROS_DISTRO_}
+fi
 ## docker push
