@@ -1,0 +1,16 @@
+ARG BASE_IMAGE=ros:ros-noetic-base
+FROM ${BASE_IMAGE}
+
+LABEL maintainer "YoheiKakiuchi <kakiuchi.yohei.sw@tut.jp>"
+
+SHELL ["/bin/bash", "-c"]
+ENV DEBIAN_FRONTEND=noninteractive
+
+###
+RUN apt update -q -qq && \
+    apt install -q -qq -y python3-pip openscad && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/
+
+#RUN pip3 install numpy solidpython
+RUN pip3 install solidpython

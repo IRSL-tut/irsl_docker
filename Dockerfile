@@ -8,6 +8,12 @@ LABEL maintainer "YoheiKakiuchi <kakiuchi.yohei.sw@tut.jp>"
 SHELL ["/bin/bash", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive
 
+###
+RUN apt update -q -qq && \
+    apt install -q -qq -y curl wget git && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/
+
 ### install choreonoid
 WORKDIR /choreonoid_ws
 RUN source /opt/ros/${ROS_DISTRO}/setup.bash && \
@@ -17,10 +23,13 @@ RUN source /opt/ros/${ROS_DISTRO}/setup.bash && \
 RUN apt update -q -qq && \
     sed -i -e 's@sudo apt-get -y install@apt-get install -y -q -qq @g' src/choreonoid/misc/script/install-requisites-ubuntu-18.04.sh && \
     src/choreonoid/misc/script/install-requisites-ubuntu-18.04.sh && \
-    apt install -q -qq -y curl python-catkin-tools libreadline-dev && \
+    if [ "$ROS_DISTRO" = "noetic" ]; then \
+    apt install -q -qq -y python3-catkin-tools libreadline-dev ipython3; \
+    else \
+    apt install -q -qq -y python-catkin-tools libreadline-dev ipython3; fi && \
     apt clean && \
     rm -rf /var/lib/apt/lists/
 
-RUN /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && catkin config --install && catkin build irsl_choreonoid --no-status --no-notify -p 1 && catkin clean -d -b -l -y"
+RUN /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && catkin config --install && catkin build irsl_choreonoid --no-status --no-notify -p 1 && catkin clean -d -b --logs -y"
 
 ### ADD entry point
