@@ -39,6 +39,6 @@ fi
 docker run -it \
     --env="DOCKER_ROS_SETUP=/choreonoid_ws/install/setup.bash" \
     ${TARGET_NAME} \
-    -- bash -c 'source /irsl_entryrc; roscd irsl_choreonoid/test; PYTHONPATH=$PYTHONPATH:$(dirname $(which choreonoid))/../lib/choreonoid-1.8/python/cnoid python3 coords_test.py'
+    -- bash -c 'source /irsl_entryrc; roscd irsl_choreonoid/test; PYTHONPATH=$PYTHONPATH:$(dirname $(which choreonoid))/../lib/choreonoid-1.8/python python3 coords_test.py'
 
 echo "BUILD: successfully finished"
