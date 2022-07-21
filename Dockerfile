@@ -19,13 +19,14 @@ RUN source /opt/ros/${ROS_DISTRO}/setup.bash && \
 RUN apt update -q -qq && \
     sed -i -e 's@sudo apt-get -y install@apt-get install -y -q -qq @g' src/choreonoid/misc/script/install-requisites-ubuntu-18.04.sh && \
     src/choreonoid/misc/script/install-requisites-ubuntu-18.04.sh && \
-    apt install -q -qq -y curl python-catkin-tools ros-${ROS_DISTRO}-openrtm-aist ros-${ROS_DISTRO}-openrtm-aist-python && \
+    apt install -q -qq -y curl python-catkin-tools ros-${ROS_DISTRO}-openrtm-aist ros-${ROS_DISTRO}-openrtm-aist-python libbullet-dev libbullet-extras-dev && \
     apt clean && \
     rm -rf /var/lib/apt/lists/
 
 #RUN patch -p1 -d src/choreonoid < src/rtmros_choreonoid/choreonoid.patch
 RUN curl -sL https://github.com/start-jsk/rtmros_choreonoid/raw/master/choreonoid.patch | patch -p1 -d src/choreonoid
-
+COPY cnoid.patch /tmp/cnoid.patch
+RUN patch -p1 -d src/choreonoid < /tmp/cnoid.patch
 RUN /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && catkin config --install && catkin build choreonoid --no-status --no-notify -p 1 && catkin clean -d -b -l -y"
 
 ### install rtmros_choreonoid

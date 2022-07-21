@@ -1,0 +1,38 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 504d56c7..fd60e91d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -8,7 +8,7 @@ include(FindPkgConfig)
+ include(CheckIncludeFiles)
+ 
+ project(Choreonoid)
+-
++add_definitions(-Wno-deprecated)
+ # set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules/)
+ 
+ set(CNOID_MAJOR_VERSION 1) 
+diff --git a/src/BulletPlugin/CMakeLists.txt b/src/BulletPlugin/CMakeLists.txt
+index 4e10b8b7..1543707d 100644
+--- a/src/BulletPlugin/CMakeLists.txt
++++ b/src/BulletPlugin/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-option(BUILD_BULLET_PLUGIN "Building BulletPlugin" OFF)
++option(BUILD_BULLET_PLUGIN "Building BulletPlugin" ON)
+ 
+ if(NOT BUILD_BULLET_PLUGIN)
+   return()
+@@ -11,12 +11,12 @@ if(UNIX)
+   if(NOT BULLET_DIR)
+     PKG_CHECK_MODULES(bullet REQUIRED bullet)
+     # HACD is not included in bullet.pc, we thus have to add it ourselves.
+-    LIST(APPEND ${bullet_LIBRARIES} HACD)
++    LIST(APPEND bullet_LIBRARIES HACD)
+   else()
+     set(ENV{PKG_CONFIG_PATH} ${BULLET_DIR}/lib/pkgconfig)
+     pkg_check_modules(bullet REQUIRED bullet)
+     if(bullet_FOUND)
+-      LIST(APPEND ${bullet_LIBRARIES} HACD)
++      LIST(APPEND bullet_LIBRARIES HACD)
+     else()
+       set(bullet_INCLUDE_DIRS ${BULLET_DIR}/include/bullet)
+       set(bullet_LIBRARY_DIRS ${BULLET_DIR}/lib/)
