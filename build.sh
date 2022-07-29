@@ -6,6 +6,10 @@ set -e
 ROS_DISTRO_=${BUILD_ROS:-"noetic"}
 ## --no-cache
 CACHED=${BUILD_CACHED:-""}
+CACHED_MAIN=${CACHED}
+if [ -n "${FORCE_BUILD}"  ]; then
+    CACHED_MAIN=--no-cache
+fi
 ## --pull
 PULLORIGIN=${BUILD_PULLED:-""}
 ##
@@ -27,7 +31,7 @@ docker build . ${CACHED} ${PULLORIGIN} -f /tmp/Dockerfile.add_glvnd      --build
 echo "## ADD virtual_gl"
 docker build . ${CACHED}               -f /tmp/Dockerfile.add_virtualgl  --build-arg BASE_IMAGE=${BUILD_A} -t ${BUILD_B}
 echo "## BUILD main"
-docker build . ${CACHED}               -f Dockerfile                     --build-arg BASE_IMAGE=${BUILD_B} -t ${BUILD_C}
+docker build . ${CACHED_MAIN}          -f Dockerfile                     --build-arg BASE_IMAGE=${BUILD_B} -t ${BUILD_C}
 echo "## ADD entrypoint"
 docker build . ${CACHED}               -f /tmp/Dockerfile.add_entrypoint --build-arg BASE_IMAGE=${BUILD_C} -t ${TARGET_NAME}
 

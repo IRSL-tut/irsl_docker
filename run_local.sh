@@ -3,29 +3,11 @@
 iname=${DOCKER_IMAGE:-"irslrepo/irsl_choreonoid:noetic"} ##
 cname=${DOCKER_CONTAINER:-"docker_irsl_choreonoid"} ## name of container (should be same as in exec.sh)
 
-###
-CHILD_PID=""
-
-sig_hdl () {
-    echo "catch signal $1"
-
-    if [ -n "$CHILD_PID" ]; then
-        kill -$1 $CHILD_PID
-    fi
-
-    exit 0
-}
-
-trap "sig_hdl SIGTERM" SIGTERM
-trap "sig_hdl SIGINT" SIGINT
-trap "sig_hdl SIGHUP" SIGHUP
-###
-
 DEFAULT_USER_DIR="$(pwd)"
+DEFAULT_SETUP=${SETUP_FILE:-"/catkin_ws/devel/setup.bash"}
 mtdir=${MOUNTED_DIR:-$DEFAULT_USER_DIR}
 
-
-VAR=${@:-"bash"}
+VAR=${@:-"/irsl_entrypoint.sh choreonoid"}
 if [ $# -eq 0 -a -z "$OPT" ]; then
     OPT=-it
 fi
@@ -51,12 +33,13 @@ xhost +si:localuser:root
 
 docker rm ${cname}
 
-docker run -it \
+docker run \
     --privileged     \
+    ${OPT}           \
     ${GPU_OPT}       \
     ${NET_OPT}       \
     ${DOCKER_ENVIRONMENT_VAR} \
-    --env="DOCKER_ROS_SETUP=/choreonoid_ws/install/setup.bash" \
+    --env="DOCKER_ROS_SETUP=${DEFAULT_SETUP}" \
     --env="ROS_IP=localhost" \
     --env="ROS_MASTER_URI=http://localhost:11311" \
     --env="DISPLAY"  \
@@ -66,13 +49,7 @@ docker run -it \
     --volume="${mtdir}:/userdir" \
     -w="/userdir" \
     ${iname} \
-    /irsl_entrypoint.sh choreonoid
-
-CHILD_PID="$!"
-
-wait ${CHILD_PID}
-
-exit 0
+    ${VAR}
 
 ##xhost -local:root
 
