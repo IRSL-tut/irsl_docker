@@ -4,7 +4,7 @@ iname=${DOCKER_IMAGE:-"irslrepo/irsl_choreonoid:noetic"} ##
 cname=${DOCKER_CONTAINER:-"docker_irsl_choreonoid"} ## name of container (should be same as in exec.sh)
 
 DEFAULT_USER_DIR="$(pwd)"
-DEFAULT_SETUP=${SETUP_FILE:-"/catkin_ws/devel/setup.bash"}
+DEFAULT_SETUP=${SETUP_FILE:-"/choreonoid_ws/install/setup.bash"}
 mtdir=${MOUNTED_DIR:-$DEFAULT_USER_DIR}
 
 VAR=${@:-"/irsl_entrypoint.sh choreonoid"}
@@ -28,6 +28,7 @@ NET_OPT="--net=host"
 
 DOCKER_ENVIRONMENT_VAR=""
 
+XDG_OPTION="-u $(id -u):$(id -g) --volume=/run/user/$(id -u):/tmp/xdg_runtime --env=XDG_RUNTIME_DIR=/tmp/xdg_runtime"
 ##xhost +local:root
 xhost +si:localuser:root
 
@@ -39,6 +40,7 @@ docker run \
     ${GPU_OPT}       \
     ${NET_OPT}       \
     ${DOCKER_ENVIRONMENT_VAR} \
+    ${XDG_OPTION} \
     --env="DOCKER_ROS_SETUP=${DEFAULT_SETUP}" \
     --env="ROS_IP=localhost" \
     --env="ROS_MASTER_URI=http://localhost:11311" \

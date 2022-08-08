@@ -20,6 +20,9 @@ RUN source /opt/ros/${ROS_DISTRO}/setup.bash && \
     wstool init src https://raw.githubusercontent.com/IRSL-tut/irsl_choreonoid/main/config/dot.rosinstall && \
     wstool update -t src
 
+## add robot_assembler
+RUN (cd /choreonoid_ws/src/choreonoid/ext; git clone https://github.com/IRSL-tut/robot_assembler_plugin.git)
+
 RUN apt update -q -qq && \
     sed -i -e 's@sudo apt-get -y install@apt-get install -y -q -qq @g' src/choreonoid/misc/script/install-requisites-ubuntu-18.04.sh && \
     src/choreonoid/misc/script/install-requisites-ubuntu-18.04.sh && \
