@@ -57,7 +57,8 @@ RUN apt update -q -qq && \
     apt clean && \
     rm -rf /var/lib/apt/lists/ && \
     python3 -m pip install --upgrade pip && \
-    python3 -m pip install jupyter
+    python3 -m pip install jupyterlab
 
 ## build xeus/example at https://github.com/jupyter-xeus/xeus.git
 ## docker run -it --net=host -v $(pwd):/hoge -w /hoge xeus:20.04 bash
+## jupyter lab --allow-root
