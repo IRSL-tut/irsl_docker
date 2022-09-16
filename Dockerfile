@@ -15,23 +15,29 @@ RUN apt update -q -qq && \
 WORKDIR /build_xeus
 RUN wget https://github.com/nlohmann/json/archive/refs/tags/v3.11.2.tar.gz
 RUN tar xf v3.11.2.tar.gz
-RUN (cd json-3.11.2; cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt . ; make install -j12)
+RUN (cd json-3.11.2; cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt/xeus . ; make install -j12)
 
 RUN wget https://github.com/xtensor-stack/xtl/archive/refs/tags/0.7.4.tar.gz
 RUN tar xf 0.7.4.tar.gz
-RUN (cd xtl-0.7.4; cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt . ; make install -j12)
+RUN (cd xtl-0.7.4; cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt/xeus . ; make install -j12)
 
 RUN wget https://github.com/zeromq/libzmq/archive/refs/tags/v4.3.4.tar.gz
 RUN tar xf v4.3.4.tar.gz
-RUN (cd libzmq-4.3.4; mkdir build; cd build; cmake -D WITH_PERF_TOOL=OFF -D ZMQ_BUILD_TESTS=OFF -D ENABLE_CPACK=OFF -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/opt ..; make install -j12)
+RUN (cd libzmq-4.3.4; mkdir build; cd build; cmake -D WITH_PERF_TOOL=OFF -D ZMQ_BUILD_TESTS=OFF -D ENABLE_CPACK=OFF -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/opt/xeus ..; make install -j12)
 
 RUN wget https://github.com/zeromq/cppzmq/archive/refs/tags/v4.8.1.tar.gz
 RUN tar xf v4.8.1.tar.gz
-RUN (cd cppzmq-4.8.1; cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt . ; make install -j12)
+RUN (cd cppzmq-4.8.1; cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt/xeus . ; make install -j12)
 
 RUN wget https://github.com/jupyter-xeus/xeus/archive/refs/tags/2.4.1.tar.gz
 RUN tar xf 2.4.1.tar.gz
-RUN (cd xeus-2.4.1; cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt . ; make install -j12)
+RUN (cd xeus-2.4.1; cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt/xeus . ; make install -j12)
+
+RUN git clone https://github.com/jupyter-xeus/xeus.git && \
+    cd xeus/example && \
+    mkdir build; cd build && \
+    cmake .. -DCMAKE_PREFIX_PATH=/opt/xeus/share/cmake -DZeroMQ_DIR=/opt/xeus/lib/cmake/ZeroMQ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt/xeus && \
+    make install
 
 ####
 #
@@ -50,7 +56,8 @@ RUN apt update -q -qq && \
     apt clean && \
     rm -rf /var/lib/apt/lists/
 
-COPY --from=builder /opt /opt
+COPY --from=builder /opt/xeus /opt/xeus
+COPY --from=builder /usr/local /usr/local
 
 RUN apt update -q -qq && \
     apt install -q -qq -y python3-pip && \
@@ -59,6 +66,8 @@ RUN apt update -q -qq && \
     python3 -m pip install --upgrade pip && \
     python3 -m pip install jupyterlab
 
-## build xeus/example at https://github.com/jupyter-xeus/xeus.git
 ## docker run -it --net=host -v $(pwd):/hoge -w /hoge xeus:20.04 bash
 ## jupyter lab --allow-root
+## cmake -DCMAKE_PREFIX_PATH=/opt/xeus/share/cmake -DZeroMQ_DIR=/opt/xeus/lib/cmake/ZeroMQ ....
+ENV JUPYTER_PATH=/opt/xeus/share/jupyter/kernels
+CMD ["jupyter", "lab", "--allow-root"]
