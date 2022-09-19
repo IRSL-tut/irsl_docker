@@ -24,16 +24,24 @@ TARGET_NAME=irslrepo/irsl_choreonoid:${ROS_DISTRO_}
 
 BUILD_A=build_temp/add_glvnd:${ROS_DISTRO_}
 BUILD_B=build_temp/add_virtualgl:${ROS_DISTRO_}
-BUILD_C=build_temp/irsl_choreonoid:${ROS_DISTRO_}
+BUILD_C=build_temp/add_xeus:${ROS_DISTRO_}
+BUILD_D=build_temp/irsl_choreonoid:${ROS_DISTRO_}
+
+###
+wget -O /tmp/Dockerfile.xeus https://github.com/IRSL-tut/irsl_docker/raw/xeus/Dockerfile
+docker build . -f /tmp/Dockerfile.xeus --build-arg BASE_IMAGE=${ORIGIN_IMAGE} -t build_temp/xeus:${ROS_DISTRO_}
+###
 
 echo "## ADD glvnd"
 docker build . ${CACHED} ${PULLORIGIN} -f /tmp/Dockerfile.add_glvnd      --build-arg BASE_IMAGE=${ORIGIN_IMAGE} -t ${BUILD_A}
 echo "## ADD virtual_gl"
 docker build . ${CACHED}               -f /tmp/Dockerfile.add_virtualgl  --build-arg BASE_IMAGE=${BUILD_A} -t ${BUILD_B}
+echo "## ADD xeus"
+docker build . ${CACHED}               -f Dockerfile.xeus  --build-arg BASE_IMAGE=${BUILD_B} -t ${BUILD_C}
 echo "## BUILD main"
-docker build . ${CACHED_MAIN}          -f Dockerfile                     --build-arg BASE_IMAGE=${BUILD_B} -t ${BUILD_C}
+docker build . ${CACHED_MAIN}          -f Dockerfile                     --build-arg BASE_IMAGE=${BUILD_C} -t ${BUILD_D}
 echo "## ADD entrypoint"
-docker build . ${CACHED}               -f /tmp/Dockerfile.add_entrypoint --build-arg BASE_IMAGE=${BUILD_C} -t ${TARGET_NAME}
+docker build . ${CACHED}               -f /tmp/Dockerfile.add_entrypoint --build-arg BASE_IMAGE=${BUILD_D} -t ${TARGET_NAME}
 
 if [ "${ROS_DISTRO_}" = "noetic" -a "${ADD_OPENSCAD}" = "add" ]; then
     docker build . ${CACHED}           -f Dockerfile.add_openscad   --build-arg BASE_IMAGE=${TARGET_NAME} -t irslrepo/irsl_choreonoid_openscad:${ROS_DISTRO_}
