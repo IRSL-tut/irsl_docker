@@ -36,6 +36,7 @@ RUN apt update -q -qq && \
     apt clean && \
     rm -rf /var/lib/apt/lists/
 
-RUN /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && catkin config --install && catkin build irsl_choreonoid --no-status --no-notify -p 1 && catkin clean -d -b --logs -y"
+RUN /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && catkin config --install && catkin build irsl_choreonoid --no-status --no-notify -p 1 --cmake-args -DZeroMQ_DIR=/opt/xeus/lib/cmake/ZeroMQ -Dxtl_DIR=/opt/xeus/share/cmake/xtl -Dnlohmann_json_DIR=/opt/xeus/share/cmake/nlohmann_json -Dcppzmq_DIR=/opt/xeus/share/cmake/cppzmq -- && catkin clean -d -b --logs -y"
 
 ### ADD entry point
+## jupyter lab --no-browser --port=8888 --ip=0.0.0.0 --NotebookApp.token='' --allow-root

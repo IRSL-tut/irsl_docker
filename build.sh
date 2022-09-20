@@ -37,7 +37,7 @@ docker build . ${CACHED} ${PULLORIGIN} -f /tmp/Dockerfile.add_glvnd      --build
 echo "## ADD virtual_gl"
 docker build . ${CACHED}               -f /tmp/Dockerfile.add_virtualgl  --build-arg BASE_IMAGE=${BUILD_A} -t ${BUILD_B}
 echo "## ADD xeus"
-docker build . ${CACHED}               -f Dockerfile.xeus  --build-arg BASE_IMAGE=${BUILD_B} -t ${BUILD_C}
+docker build . ${CACHED}               -f Dockerfile.add_xeus  --build-arg BASE_IMAGE=${BUILD_B} --build-arg BUILD_IMAGE=build_temp/xeus:${ROS_DISTRO_} -t ${BUILD_C}
 echo "## BUILD main"
 docker build . ${CACHED_MAIN}          -f Dockerfile                     --build-arg BASE_IMAGE=${BUILD_C} -t ${BUILD_D}
 echo "## ADD entrypoint"
