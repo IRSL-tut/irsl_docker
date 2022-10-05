@@ -1,0 +1,45 @@
+# create /choreonoid_src/choreonoid <-- src_dir
+# create /choreonoid_src/build <-- build_dir
+## installed under /opt/choreonoid
+# docker build --build-arg UBUNTU_VER=18.04 --build-arg BASE_IMAGE=ubuntu:18.04 -f Dockerfile.choreonoid_src -t repo.irsl.eiiris.tut.ac.jp/choreonoid_src:18.04 .
+# docker build --build-arg UBUNTU_VER=20.04 --build-arg BASE_IMAGE=ubuntu:20.04 -f Dockerfile.choreonoid_src -t repo.irsl.eiiris.tut.ac.jp/choreonoid_src:20.04 .
+
+ARG BASE_IMAGE=ubuntu:20.04
+FROM ${BASE_IMAGE}
+
+ARG UBUNTU_VER=20.04
+
+LABEL maintainer "YoheiKakiuchi <kakiuchi.yohei.sw@tut.jp>"
+
+SHELL ["/bin/bash", "-c"]
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update -qq && apt-get install -y --no-install-recommends sudo
+
+### time zone
+RUN echo 'Asia/Tokyo' > /etc/timezone && \
+    ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime && \
+    apt-get update -q -qq && \
+    apt-get install -q -qq -y --no-install-recommends tzdata && \
+    rm -rf /var/lib/apt/lists/*
+
+###
+RUN apt update -q -qq && \
+    apt install -q -qq -y curl wget git && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/
+
+WORKDIR /choreonoid_src
+
+RUN git clone --depth=1 -b stable https://github.com/IRSL-tut/choreonoid.git
+
+RUN apt update -q -qq && \
+    choreonoid/misc/script/install-requisites-ubuntu-${UBUNTU_VER}.sh && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/
+
+WORKDIR /choreonoid_src/build
+
+RUN cmake -DCMAKE_INSTALL_PREFIX=/opt/choreonoid /choreonoid_src/choreonoid && \
+    make -j$(nproc) && \
+    make install
