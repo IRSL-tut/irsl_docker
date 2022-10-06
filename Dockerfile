@@ -3,7 +3,7 @@
 ARG BASE_IMAGE=ros:ros-melodic-base
 FROM ${BASE_IMAGE}
 
-LABEL maintainer "YoheiKakiuchi <kakiuchi.yohei.sw@tut.jp>"
+LABEL maintainer "IRSL-tut (https://github.com/IRSL-tut) <faculty@irsl.eiiris.tut.ac.jp>"
 
 SHELL ["/bin/bash", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive

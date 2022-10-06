@@ -9,7 +9,7 @@ FROM ${BASE_IMAGE}
 
 ARG UBUNTU_VER=20.04
 
-LABEL maintainer "YoheiKakiuchi <kakiuchi.yohei.sw@tut.jp>"
+LABEL maintainer "IRSL-tut (https://github.com/IRSL-tut) <faculty@irsl.eiiris.tut.ac.jp>"
 
 SHELL ["/bin/bash", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive
