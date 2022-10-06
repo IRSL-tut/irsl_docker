@@ -5,8 +5,6 @@ FROM ${BUILD_IMAGE} as builder
 ## docker build -f Dockerfile --build-arg BUILD_IMAGE=ubuntu:20.04 --build-arg BASE_IMAGE=ubuntu:20.04 -t ${BUILD_PREFIX}xeus:20.04 .
 ## docker build -f Dockerfile --build-arg BUILD_IMAGE=ubuntu:22.04 --build-arg BASE_IMAGE=ubuntu:22.04 -t ${BUILD_PREFIX}xeus:22.04 .
 
-LABEL maintainer "YoheiKakiuchi <kakiuchi.yohei.sw@tut.jp>"
-
 SHELL ["/bin/bash", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -45,7 +43,7 @@ RUN (cd xeus; cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt/xeus 
 ###
 FROM ${BASE_IMAGE}
 
-LABEL maintainer "YoheiKakiuchi <kakiuchi.yohei.sw@tut.jp>"
+LABEL maintainer "IRSL-tut (https://github.com/IRSL-tut) <faculty@irsl.eiiris.tut.ac.jp>"
 
 SHELL ["/bin/bash", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive
