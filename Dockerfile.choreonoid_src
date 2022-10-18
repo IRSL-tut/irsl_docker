@@ -3,6 +3,7 @@
 ## installed under /opt/choreonoid
 # docker build --build-arg UBUNTU_VER=18.04 --build-arg BASE_IMAGE=ubuntu:18.04 -f Dockerfile.choreonoid_src -t repo.irsl.eiiris.tut.ac.jp/choreonoid_src:18.04 .
 # docker build --build-arg UBUNTU_VER=20.04 --build-arg BASE_IMAGE=ubuntu:20.04 -f Dockerfile.choreonoid_src -t repo.irsl.eiiris.tut.ac.jp/choreonoid_src:20.04 .
+# docker build --build-arg UBUNTU_VER=22.04 --build-arg BASE_IMAGE=ubuntu:22.04 -f Dockerfile.choreonoid_src -t repo.irsl.eiiris.tut.ac.jp/choreonoid_src:22.04 .
 
 ARG BASE_IMAGE=ubuntu:20.04
 FROM ${BASE_IMAGE}
