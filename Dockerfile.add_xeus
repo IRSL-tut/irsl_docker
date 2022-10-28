@@ -23,7 +23,7 @@ RUN apt update -q -qq && \
     apt clean && \
     rm -rf /var/lib/apt/lists/ && \
     python3 -m pip install --upgrade pip && \
-    python3 -m pip install jupyterlab
+    python3 -m pip install jupyterlab jupyter-console
 
 ENV PATH=$PATH:/opt/xeus/bin
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/xeus/lib
