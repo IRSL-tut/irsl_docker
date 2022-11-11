@@ -40,17 +40,19 @@ RUN source /choreonoid_ws/install/setup.bash && \
     wstool set -y -t src rtmros_tutorials https://github.com/start-jsk/rtmros_tutorials.git --git && \
     wstool set -y -t src jsk_robot https://github.com/jsk-ros-pkg/jsk_robot.git --git && \
     wstool set -y -t src jsk_control https://github.com/jsk-ros-pkg/jsk_control.git --git && \
+    wstool set -y -t src log_plotter https://github.com/kindsenior/log_plotter.git  --git && \
     wstool update -t src && \
     (cd src/jsk_robot; rm -rf jsk_aero_robot jsk_baxter_robot jsk_denso_robot jsk_fetch_robot jsk_kinova_robot jsk_magni_robot jsk_naoqi_robot jsk_pr2_robot ) && \
     (cd src/rtmros_tutorials; rm -rf hrpsys_gazebo_tutorials hironx_tutorial hrpsys_tutorials openhrp3_tutorials)
 
 RUN source /choreonoid_ws/install/setup.bash && \
     apt update -q -qq && \
-    apt install -q -qq -y ros-${ROS_DISTRO}-jsk-tilt-laser ros-${ROS_DISTRO}-jsk-recognition ros-${ROS_DISTRO}-pr2-navigation-self-filter && \
+    apt install -q -qq -y ros-${ROS_DISTRO}-jsk-tilt-laser ros-${ROS_DISTRO}-jsk-recognition ros-${ROS_DISTRO}-pr2-navigation-self-filter python-pip && \
     (rosdep install -n -q -y -r --from-paths src --ignore-src --skip-keys libpng12-dev --skip-keys leap_motion || echo 'Ignore_rosdep_error') && \
     apt clean && \
+    python -m pip install metayaml pyqtgraph && \
     rm -rf /var/lib/apt/lists/
 
-RUN /bin/bash -c "source /choreonoid_ws/install/setup.bash && catkin build hrpsys_choreonoid_tutorials jsk_robot_startup --no-status --no-notify -j 1 -p 1 && catkin clean -b -l -y"
+RUN /bin/bash -c "source /choreonoid_ws/install/setup.bash && catkin build hrpsys_choreonoid_tutorials jsk_robot_startup log_plotter --no-status --no-notify -j 1 -p 1 && catkin clean -b -l -y"
 
 ### ADD entry point
