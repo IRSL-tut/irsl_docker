@@ -50,7 +50,7 @@ RUN source /choreonoid_ws/install/setup.bash && \
     apt install -q -qq -y ros-${ROS_DISTRO}-jsk-tilt-laser ros-${ROS_DISTRO}-jsk-recognition ros-${ROS_DISTRO}-pr2-navigation-self-filter python-pip && \
     (rosdep install -n -q -y -r --from-paths src --ignore-src --skip-keys libpng12-dev --skip-keys leap_motion || echo 'Ignore_rosdep_error') && \
     apt clean && \
-    python -m pip install metayaml pyqtgraph && \
+    python -m pip install metayaml==0.27 pyqtgraph && \
     rm -rf /var/lib/apt/lists/
 
 RUN /bin/bash -c "source /choreonoid_ws/install/setup.bash && catkin build hrpsys_choreonoid_tutorials jsk_robot_startup log_plotter --no-status --no-notify -j 1 -p 1 && catkin clean -b -l -y"
