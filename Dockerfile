@@ -20,13 +20,15 @@ RUN apt update -q -qq && \
 WORKDIR /choreonoid_ws
 RUN source /opt/ros/${ROS_DISTRO}/setup.bash && \
     wstool init src https://raw.githubusercontent.com/IRSL-tut/irsl_choreonoid/main/config/dot.rosinstall && \
-    wstool update -t src
+    wstool set choreonoid_ros https://github.com/choreonoid/choreonoid_ros.git -y -t src --git && \
+    wstool update -t src && \
+    patch -d src -p0 < src/irsl_choreonoid/config/osqp-cpp.patch
 
 ## add robot_assembler
 RUN (cd /choreonoid_ws/src/choreonoid/ext; git clone https://github.com/IRSL-tut/robot_assembler_plugin.git)
 
 ## add jupyter_plugin
-#RUN (cd /choreonoid_ws/src/choreonoid/ext; git clone https://github.com/IRSL-tut/jupyter_plugin.git)
+RUN (cd /choreonoid_ws/src/choreonoid/ext; git clone https://github.com/IRSL-tut/jupyter_plugin.git)
 
 RUN apt update -q -qq && \
     src/choreonoid/misc/script/install-requisites-ubuntu-${UBUNTU_VER}.sh && \
@@ -36,6 +38,9 @@ RUN apt update -q -qq && \
     apt install -q -qq -y python-catkin-tools libreadline-dev ipython3; fi && \
     apt clean && \
     rm -rf /var/lib/apt/lists/
+
+RUN python3 -m pip install --upgrade pip && \
+    python3 -m pip install ipython jedi jupyterlab jupyter-console
 
 RUN /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && catkin config --install && catkin build irsl_choreonoid --no-status --no-notify -p 1 && catkin clean -d -b --logs -y"
 
