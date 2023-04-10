@@ -17,9 +17,9 @@ on:
         default: 'default'
         type: string
   push:
-    branches: [choreonoid_system]
+    branches: [irsl_system]
   pull_request:
-    branches: [choreonoid_system]
+    branches: [irsl_system]
 #  schedule:
 #    - cron: '30 2 * * 2,6'
 ## source
@@ -35,9 +35,11 @@ jobs:
         ubuntu: [ 18.04, 20.04 ]
     runs-on: self-hosted
     env:
-      IMAGE_NAME: irsl_base
+      IMAGE_NAME: irsl_system
       DOCKER_DEPLOY: repo.irsl.eiiris.tut.ac.jp/
     steps:
+      - name: workflow_dispatch: ${{ inputs.event_type }} from ${{ inputs.source }} ${{ inputs.hash }}
+        if: github.event_name == 'workflow_dispatch'
       - name: Check Version
         run: |
           if   [ ${{ matrix.ubuntu }} == 22.04 ]; then
@@ -52,11 +54,13 @@ jobs:
       - name: Check out repository code(src)
         uses: actions/checkout@v3
         with:
-          ref: 'choreonoid_system'
+          ref: 'irsl_system'
       - name: Build
-        run: ./build.sh
-#      - name: Deploy
-#        if: ${{ github.event_name != 'pull_request' }}
-#        run: |
-#          docker tag actions/add_entry:${{ env.ROS_DISTRO }} ${{ env.DOCKER_DEPLOY }}${{ env.IMAGE_NAME }}:${{ env.ROS_DISTRO }}_nvidia
-#          docker push ${{ env.DOCKER_DEPLOY }}${{ env.IMAGE_NAME }}:${{ env.ROS_DISTRO }}_nvidia
+        env:
+          NO_CACHE="YES"
+        run: ./build.sh actions/irsl_system_${{ matrix.ubuntu }}_${{ inputs.source }}:${{ inputs.hash }}
+      - name: Deploy
+        if: github.event_name != 'pull_request'
+        run: |
+          docker tag    actions/irsl_system_${{ matrix.ubuntu }}_${{ inputs.source }}:${{ inputs.hash }} ${{ env.DOCKER_DEPLOY }}${{ env.IMAGE_NAME }}:${{ env.ROS_DISTRO }}
+          docker push ${{ env.DOCKER_DEPLOY }}${{ env.IMAGE_NAME }}:${{ env.ROS_DISTRO }}
