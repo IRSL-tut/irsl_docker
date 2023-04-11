@@ -66,7 +66,7 @@
 
 (start-logとsave-logの間でログを取得したい内容を記述する)
 
-### ログ表示用コンソール立ち上げ(console B)，ログをlog_plotterを表示する
+### ログ表示用コンソール立ち上げ(console C)，ログをlog_plotterを表示する
 - ```sudo docker exec -it  docker_humanoid_sim bash```
 - ```source /irsl_entryrc```
 - ```rosrun log_plotter datalogger_plotter_with_pyqtgraph.py --plot $(rospack find log_plotter)/config/robot/jaxon/jaxon_plot.yaml --layout $(rospack find log_plotter)/config/st_layout.yaml -f /userdir/test00_JAXON_JVRC_xxxx```
