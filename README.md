@@ -59,3 +59,16 @@
 
 ### 実機の手順/歩く x[m] y[m] theta[deg]
 - ```(send *ri* :go-pos 1.0 0 0)```
+
+### ログを取得する
+- ```(send *ri* :set-log-maxlength (* 500 60 5))```
+- ```(progn (send *ri* :start-log) (send *ri* :go-pos 2 0 0) (send *ri* :save-log "/userdir/test00"))```
+
+(start-logとsave-logの間でログを取得したい内容を記述する)
+
+### ログ表示用コンソール立ち上げ(console C)，ログをlog_plotterを表示する
+- ```sudo docker exec -it  docker_humanoid_sim bash```
+- ```source /irsl_entryrc```
+- ```rosrun log_plotter datalogger_plotter_with_pyqtgraph.py --plot $(rospack find log_plotter)/config/robot/jaxon/jaxon_plot.yaml --layout $(rospack find log_plotter)/config/st_layout.yaml -f /userdir/test00_JAXON_JVRC_xxxx```
+
+(-f では拡張子の前の部分を指定(.を含まない))

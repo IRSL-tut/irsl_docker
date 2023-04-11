@@ -1,6 +1,6 @@
 #!/bin/bash
 
-iname=${DOCKER_IMAGE:-"irslrepo/humanoid_sim:melodic"} ##
+iname=${DOCKER_IMAGE:-"repo.irsl.eiiris.tut.ac.jp/humanoid_sim:melodic"} ##
 cname=${DOCKER_CONTAINER:-"docker_humanoid_sim"} ## name of container (should be same as in exec.sh)
 
 DEFAULT_USER_DIR="$(pwd)"
