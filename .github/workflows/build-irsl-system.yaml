@@ -1,5 +1,5 @@
 name: Build IRSL system
-run-name: "${{ github.actor }} &#58; ${{ github.event_name }} i&#58; ${{ inputs.event_type }} ${{ inputs.source }} ${{ inputs.hash }}"
+run-name: "${{ github.actor }} / ${{ github.event_name }} / ${{ inputs.event_type }} / ${{ inputs.source }} / ${{ inputs.hash }}"
 #
 on:
   workflow_dispatch:
