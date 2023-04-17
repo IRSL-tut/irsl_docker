@@ -9,7 +9,7 @@ LABEL maintainer "IRSL-tut (https://github.com/IRSL-tut) <faculty@irsl.eiiris.tu
 SHELL ["/bin/bash", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive
 
-ARG VIRTUALGL_VERSION=3.0.2
+ARG VIRTUALGL_VERSION=3.1
 RUN apt-get update -q -qq && \
     apt-get install -q -qq -y --no-install-recommends libxtst6 libxv1 libglu1-mesa libegl1-mesa wget \
     && rm -rf /var/lib/apt/lists/*
